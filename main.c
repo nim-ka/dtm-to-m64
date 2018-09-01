@@ -20,6 +20,8 @@ int main () {
 	double cStickAngle;
 	
 	// Initialize files
+	printf("Initializing files...\n");
+	
 	dtm = fopen("input.dtm", "r");
 	template = fopen("template.m64", "r");
 	m64 = fopen("output.m64", "w");
@@ -27,6 +29,8 @@ int main () {
 	if (dtm == NULL || template == NULL || m64 == NULL) return 1;
 	
 	// Read frames from dtm
+	printf("Writing M64 header...\n");
+	
 	fseek(dtm, 0x015, SEEK_SET);
 	fread(frames, 1, 4, dtm);
 	
@@ -43,6 +47,8 @@ int main () {
 	
 	// Put m64 pointer at start of controller data
 	fseek(m64, 0x400, SEEK_SET);
+	
+	printf("Writing controller data...\n");
 	
 	while (fread(dtmBuffer, 8, 1, dtm)) {
 		cStickAngle = atan2(dtmBuffer[0].cStickY - 128, dtmBuffer[0].cStickX - 128) * (180.0 / M_PI);
@@ -66,9 +72,13 @@ int main () {
 		fwrite(m64Buffer, 4, 1, m64);
 	}
 	
+	printf("Closing files...\n");
+	
 	fclose(dtm);
 	fclose(template);
 	fclose(m64);
+	
+	printf("Done!\n");
 	
 	return 0;
 }
