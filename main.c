@@ -4,8 +4,8 @@
 int main () {
 	FILE *dtm;
 	FILE *m64;
-	gcController dtmBuffer;
-	n64Controller m64Buffer;
+	struct gcController dtmBuffer;
+	struct n64Controller m64Buffer;
 	
 	dtm = fopen("input.dtm", "r");
 	m64 = fopen("output.m64", "w");
