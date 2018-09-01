@@ -66,5 +66,9 @@ int main () {
 		fwrite(m64Buffer, 4, 1, m64);
 	}
 	
+	fclose(dtm);
+	fclose(template);
+	fclose(m64);
+	
 	return 0;
 }
