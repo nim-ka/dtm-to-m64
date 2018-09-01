@@ -7,7 +7,7 @@ int main () {
 	FILE *m64;
 	
 	struct gcController dtmBuffer[1];
-	struct n64Controller m64Buffer[1];
+	struct n64Controller m64Buffer;
 	
 	double cStickAngle;
 	
@@ -22,7 +22,7 @@ int main () {
 	while (fread(dtmBuffer, 8, 1, dtm)) {
 		cStickAngle = atan2(dtmBuffer[0].cStickY - 128, dtmBuffer[0].cStickX - 128) * (180.0 / M_PI);
 		
-		m64Buffer[0] = {
+		m64Buffer = {
 			.buttonA: dtmBuffer[0].buttonA,
 			.buttonB: dtmBuffer[0].buttonB,
 			.buttonZ: dtmBuffer[0].buttonZ,
@@ -40,7 +40,7 @@ int main () {
 			.cRight: cStickAngle >= 315 || cStickAngle <= 45
 		};
 		
-		fwrite(m64Buffer, 4, 1, m64);
+		fwrite({m64Buffer}, 4, 1, m64);
 	}
 	
 	return 0;
