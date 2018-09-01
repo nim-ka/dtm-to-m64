@@ -15,8 +15,8 @@ struct gcController {
 	unsigned int pressureR: 8;
 	unsigned int joystickX: 8;
 	unsigned int joystickY: 8;
-	unsigned int cstickX: 8;
-	unsigned int cstickY: 8;
+	unsigned int cStickX: 8;
+	unsigned int cStickY: 8;
 };
 
 struct n64Controller {
