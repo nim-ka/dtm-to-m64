@@ -3,21 +3,46 @@
 #include <math.h>
 
 int main () {
+	// Files
 	FILE *dtm;
+	FILE *template;
 	FILE *m64;
 	
+	// File buffers
 	struct gcController dtmBuffer[1];
+	char templateBuffer[0x300];
 	struct n64Controller m64Buffer[1];
 	
+	// Frame count has to be written into the m64
+	unsigned char frames[4];
+	
+	// For turning C stick X and Y on GC controller into C buttons on N64 controller
 	double cStickAngle;
 	
+	// Initialize files
 	dtm = fopen("input.dtm", "r");
+	template = fopen("template.m64", "r");
 	m64 = fopen("output.m64", "w");
 	
-	if (dtm == NULL) return 1;
+	if (dtm == NULL || template == NULL || m64 == NULL) return 1;
 	
+	// Read frames from dtm
+	fseek(dtm, 0x015, SEEK_SET);
+	fread(frames, 1, 4, dtm);
+	
+	// Put dtm pointer at start of controller data
 	fseek(dtm, 0x100, SEEK_SET);
-	fseek(m64, 0x300, SEEK_SET);
+	
+	// Copy template to m64
+	fread(templateBuffer, 1, 0x400, template);
+	fwrite(templateBuffer, 1, 0x400, m64);
+	
+	// Write frames to m64
+	fseek(m64, 0x00C, SEEK_SET);
+	fwrite(frames, 1, 4, m64);
+	
+	// Put m64 pointer at start of controller data
+	fseek(m64, 0x400, SEEK_SET);
 	
 	while (fread(dtmBuffer, 8, 1, dtm)) {
 		cStickAngle = atan2(dtmBuffer[0].cStickY - 128, dtmBuffer[0].cStickX - 128) * (180.0 / M_PI);
