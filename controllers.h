@@ -4,6 +4,7 @@ struct gcController {
 	int buttonB: 1;
 	int buttonX: 1;
 	int buttonY: 1;
+	int buttonZ: 1;
 	int dpadUp: 1;
 	int dpadDown: 1;
 	int dpadLeft: 1;
