@@ -36,4 +36,6 @@ struct n64Controller {
 	int cDown: 1;
 	int cLeft: 1;
 	int cRight: 1;
+	unsigned int joystickX: 8;
+	unsigned int joystickY: 8;
 };
