@@ -59,7 +59,7 @@ int main () {
 	printf("Writing controller data...\n");
 	
 	while (fread(dtmBuffer, 8, 1, dtm)) {
-		if (memcmp(pdtmBuffer[0], dtmBuffer[0], 8) == 0) {
+		if (memcmp(pdtmBuffer, dtmBuffer, 8) == 0) {
 			cStickAngle = atan2(dtmBuffer[0].cStickY - 128, dtmBuffer[0].cStickX - 128) * (180.0 / M_PI);
 			
 			m64Buffer[0].buttonA = dtmBuffer[0].buttonA;
