@@ -13,8 +13,9 @@ int main () {
 	char templateBuffer[0x400];
 	struct n64Controller m64Buffer[1];
 	
-	// Frame count has to be written into the m64
+	// Frame and VI counts have to be written into the m64
 	unsigned char frames[4];
+	unsigned char vis[4];
 	
 	// For turning C stick X and Y on GC controller into C buttons on N64 controller
 	double cStickAngle;
@@ -28,22 +29,28 @@ int main () {
 	
 	if (dtm == NULL || template == NULL || m64 == NULL) return 1;
 	
-	// Read frames from dtm
-	printf("Writing M64 header...\n");
-	
-	fseek(dtm, 0x015, SEEK_SET);
-	fread(frames, 1, 4, dtm);
-	
-	// Put dtm pointer at start of controller data
-	fseek(dtm, 0x100, SEEK_SET);
-	
 	// Copy template to m64
 	fread(templateBuffer, 1, 0x400, template);
 	fwrite(templateBuffer, 1, 0x400, m64);
 	
-	// Write frames to m64
+	// Read frames and VIs from dtm
+	printf("Writing M64 header...\n");
+	
+	fseek(dtm, 0x00D, SEEK_SET);
+	fread(frames, 1, 4, dtm);
+	
+	fseek(dtm, 0x015, SEEK_SET);
+	fread(vis, 1, 4, dtm);
+	
+	// Write frames and VIs to m64
 	fseek(m64, 0x00C, SEEK_SET);
 	fwrite(frames, 1, 4, m64);
+	
+	fseek(m64, 0x018, SEEK_SET);
+	fwrite(vis, 1, 4, m64);
+	
+	// Put dtm pointer at start of controller data
+	fseek(dtm, 0x100, SEEK_SET);
 	
 	// Put m64 pointer at start of controller data
 	fseek(m64, 0x400, SEEK_SET);
