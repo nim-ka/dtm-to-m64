@@ -75,6 +75,8 @@ int main () {
 		m64Buffer[0].cDown = cStickAngle >= 225 && cStickAngle <= 315;
 		m64Buffer[0].cLeft = cStickAngle >= 135 && cStickAngle <= 225;
 		m64Buffer[0].cRight = cStickAngle >= 315 || cStickAngle <= 45;
+		m64Buffer[0].joystickX = dtmBuffer[0].joystickX;
+		m64Buffer[0].joystickY = dtmBuffer[0].joystickY;
 		
 		fwrite(m64Buffer, 4, 1, m64);
 	}
