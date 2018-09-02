@@ -10,7 +10,7 @@ int main () {
 	
 	// File buffers
 	struct gcController dtmBuffer[1];
-	char templateBuffer[0x300];
+	char templateBuffer[0x400];
 	struct n64Controller m64Buffer[1];
 	
 	// Frame count has to be written into the m64
