@@ -10,7 +10,7 @@ int main () {
 	
 	// File buffers
 	struct gcController dtmBuffer[1];
-	struct gcController pdtmBuffer; // Stores previous VI of DTM
+	struct gcController pdtmBuffer[1]; // Stores previous VI of DTM
 	char templateBuffer[0x400];
 	struct n64Controller m64Buffer[1];
 	
@@ -59,7 +59,7 @@ int main () {
 	printf("Writing controller data...\n");
 	
 	while (fread(dtmBuffer, 8, 1, dtm)) {
-		if (memcmp(pdtmBuffer, dtmBuffer[0], 8) == 0) {
+		if (memcmp(pdtmBuffer[0], dtmBuffer[0], 8) == 0) {
 			cStickAngle = atan2(dtmBuffer[0].cStickY - 128, dtmBuffer[0].cStickX - 128) * (180.0 / M_PI);
 			
 			m64Buffer[0].buttonA = dtmBuffer[0].buttonA;
@@ -82,7 +82,7 @@ int main () {
 			
 			fwrite(m64Buffer, 4, 1, m64);
 			
-			pdtmBuffer = dtmBuffer[0];
+			pdtmBuffer[0] = dtmBuffer[0];
 		}
 	}
 	
