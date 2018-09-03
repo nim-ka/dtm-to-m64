@@ -9,10 +9,10 @@ int main () {
 	FILE *m64;
 	
 	// File buffers
-	struct gcController dtmBuffer[1];
-	struct gcController pdtmBuffer[1]; // Stores previous VI of DTM
+	struct gcController dtmBuffer;
+	struct gcController pdtmBuffer; // Stores previous VI of DTM
 	char templateBuffer[0x400];
-	struct n64Controller m64Buffer[1];
+	struct n64Controller m64Buffer;
 	
 	// Frame and VI counts have to be written into the m64
 	unsigned char frames[4];
@@ -58,32 +58,32 @@ int main () {
 	
 	printf("Writing controller data...\n");
 	
-	while (fread(dtmBuffer, 8, 1, dtm)) {
-		if (memcmp(pdtmBuffer, dtmBuffer, 8) == 0) {
-			cStickAngle = atan2(dtmBuffer[0].cStickY - 128, dtmBuffer[0].cStickX - 128) * (180.0 / M_PI);
+	while (fread(&dtmBuffer, 8, 1, dtm)) {
+		if (memcmp(&pdtmBuffer, &dtmBuffer, 8) == 0) {
+			cStickAngle = atan2(dtmBuffer.cStickY - 128, dtmBuffer.cStickX - 128) * (180.0 / M_PI);
 			
-			m64Buffer[0].buttonA = dtmBuffer[0].buttonA;
-			m64Buffer[0].buttonB = dtmBuffer[0].buttonB;
-			m64Buffer[0].buttonZ = dtmBuffer[0].buttonZ;
-			m64Buffer[0].buttonS = dtmBuffer[0].buttonS;
-			m64Buffer[0].dpadUp = dtmBuffer[0].dpadUp;
-			m64Buffer[0].dpadDown = dtmBuffer[0].dpadDown;
-			m64Buffer[0].dpadLeft = dtmBuffer[0].dpadLeft;
-			m64Buffer[0].dpadRight = dtmBuffer[0].dpadRight;
-			m64Buffer[0].reserved = 0x0;
-			m64Buffer[0].buttonL = dtmBuffer[0].buttonL;
-			m64Buffer[0].buttonR = dtmBuffer[0].buttonR;
-			m64Buffer[0].cUp = cStickAngle >= 45 && cStickAngle <= 135;
-			m64Buffer[0].cDown = cStickAngle >= 225 && cStickAngle <= 315;
-			m64Buffer[0].cLeft = cStickAngle >= 135 && cStickAngle <= 225;
-			m64Buffer[0].cRight = cStickAngle >= 315 || cStickAngle <= 45;
-			m64Buffer[0].joystickX = dtmBuffer[0].joystickX;
-			m64Buffer[0].joystickY = dtmBuffer[0].joystickY;
+			m64Buffer.buttonA = dtmBuffer.buttonA;
+			m64Buffer.buttonB = dtmBuffer.buttonB;
+			m64Buffer.buttonZ = dtmBuffer.buttonZ;
+			m64Buffer.buttonS = dtmBuffer.buttonS;
+			m64Buffer.dpadUp = dtmBuffer.dpadUp;
+			m64Buffer.dpadDown = dtmBuffer.dpadDown;
+			m64Buffer.dpadLeft = dtmBuffer.dpadLeft;
+			m64Buffer.dpadRight = dtmBuffer.dpadRight;
+			m64Buffer.reserved = 0x0;
+			m64Buffer.buttonL = dtmBuffer.buttonL;
+			m64Buffer.buttonR = dtmBuffer.buttonR;
+			m64Buffer.cUp = cStickAngle >= 45 && cStickAngle <= 135;
+			m64Buffer.cDown = cStickAngle >= 225 && cStickAngle <= 315;
+			m64Buffer.cLeft = cStickAngle >= 135 && cStickAngle <= 225;
+			m64Buffer.cRight = cStickAngle >= 315 || cStickAngle <= 45;
+			m64Buffer.joystickX = dtmBuffer.joystickX - 128;
+			m64Buffer.joystickY = dtmBuffer.joystickY - 128;
 			
-			fwrite(m64Buffer, 4, 1, m64);
-			
-			pdtmBuffer[0] = dtmBuffer[0];
+			fwrite(&m64Buffer, 4, 1, m64);
 		}
+		
+		pdtmBuffer = dtmBuffer;
 	}
 	
 	printf("Closing files...\n");
